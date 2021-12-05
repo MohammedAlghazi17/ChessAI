@@ -4,9 +4,8 @@ import java.util.*;
 import javax.swing.*;
 
 /*
-	Mohammed Alghazi
-  BSHCDA4 Specialization, Data Analytics
-  X18208495
+	This class can be used as a starting point for creating your Chess game project. The only piece that
+	has been coded is a white pawn...a lot done, more to do!
 */
 
 public class ChessProject extends JFrame implements MouseListener, MouseMotionListener {
@@ -21,16 +20,10 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 	int initialY;
 	JPanel panels;
 	JLabel pieces;
-  Boolean whiteTurn; // if white piece moves first
-  Boolean blackTurn;
 
 
     public ChessProject(){
         Dimension boardSize = new Dimension(600, 600);
-
-        whiteTurn = true; // white piece has to move first
-        blackTurn = false; // black piece cant move first
-
 
         //  Use a Layered Pane for this application
         layeredPane = new JLayeredPane();
@@ -116,7 +109,6 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 		pieces = new JLabel( new ImageIcon("BlackRook.png") );
 		panels = (JPanel)chessBoard.getComponent(63);
 	    panels.add(pieces);
-
     }
 
 	/*
@@ -135,75 +127,37 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 	/*
 		This is a method to check if a piece is a Black piece.
 	*/
-  private Boolean checkWhiteOponent(int newX, int newY){   /* a method called checkWhiteOponent that takes as an argument the coordinates
-                                                of a position and checks if there is an opponent’s piece present on the square*/
-   Boolean oponent;
-   Component c1 = chessBoard.findComponentAt(newX, newY);
-   JLabel awaitingPiece = (JLabel)c1;
-   String tmp1 = awaitingPiece.getIcon().toString();
-   if(((tmp1.contains("Black")))){
-     oponent = true;
-     System.out.println("opa");
-     if(tmp1.contains("King")){
-       oponent = false;
-       System.out.println("opb"); // only a checkmate can kill the king, therefore no pieces are coded to kill the king
-     }
-   }
-   else{
-     oponent = false;
-     System.out.println("opc");
-   }
-   return oponent;
- }
+	private Boolean checkWhiteOponent(int newX, int newY){
+		Boolean oponent;
+		Component c1 = chessBoard.findComponentAt(newX, newY);
+		JLabel awaitingPiece = (JLabel)c1;
+		String tmp1 = awaitingPiece.getIcon().toString();
+		if(((tmp1.contains("Black")))){
+			oponent = true;
+		}
+		else{
+			oponent = false;
+		}
+		return oponent;
+	}
+  // This is a method to check if a piece is a white piece
+  	private Boolean checkBlackOponent(int newX, int newY){
+  		Boolean oponent;
+  		Component c1 = chessBoard.findComponentAt(newX, newY);
+  		JLabel awaitingPiece = (JLabel)c1;
+  		String tmp1 = awaitingPiece.getIcon().toString();
+      if(tmp1.contains("King")){  // checking the king
+        oponent = false;
+      } else
+  		if(((tmp1.contains("White")))){
+  			oponent = true;
+  		}
+  		else{
+  			oponent = false;
+  		}
+  		return oponent;
+  	}
 
- private Boolean checkBlackOponent(int newX, int newY){   /* a method called checkBlackOponent that takes as an argument the coordinates
-                                               of a position and checks if there is an opponent’s piece present on the square*/
-   Boolean oponent;
-   Component c1 = chessBoard.findComponentAt(newX, newY);
-   JLabel awaitingPiece = (JLabel)c1;
-   String tmp1 = awaitingPiece.getIcon().toString();
-   if(((tmp1.contains("White")))){
-     oponent = true;
-     if(tmp1.contains("King")){
-       oponent = false; // only a checkmate can kill the king, therefore no pieces are coded to kill the king
-     }
-   }
-   else{
-     oponent = false;
-   }
-   return oponent;
- }
-
- private String GetPieceName(int newX, int newY){    // created a method called GetPieceName
-   Component c = chessBoard.findComponentAt(newX, newY); // the method get pieceName looks for Components on the chessBoard at these coordinates(int newX, int newY)//
-   if(c instanceof JLabel){  // if c is a picture then run this code inside the brackets
-     JLabel awaitingPiece = (JLabel) c;  // it casts Component into a JLabel
-     String tmp1 = awaitingPiece.getIcon().toString(); // converts the icon text into a string
-     return tmp1; // returns tmp1
-   }
-   else{
-     return "";
-   }
- }
-
- //
-
- private Boolean IsKingAdjacent(int newX, int newY){ // this method makes sure that we cannot move the king directly into a piece that is going to attack it
-    if((piecePresent(newX, newY+75)&& GetPieceName(newX, newY+75).contains("King")||(piecePresent(newX, newY-75)&& GetPieceName(newX, newY-75).contains("King")))){
-      return  true;  // if a piece is present and only if it is a king piece then return true
-      // the code below calculates all the directions
-    }
-    else if((piecePresent(newX+75,newY)&& GetPieceName(newX+75, newY).contains("King")||(piecePresent(newX-75, newY)&& GetPieceName(newX-75, newY).contains("King")))){
-      return true;
-    }
-    else if((piecePresent(newX-75, newY+75)&& GetPieceName(newX-75, newY+75).contains("King")||(piecePresent(newX+75, newY-75)&& GetPieceName(newX+75, newY-75).contains("King")))){
-      return  true;
-    }
-    else if((piecePresent(newX-75, newY-75)&& GetPieceName(newX-75, newY-75).contains("King")||(piecePresent(newX+75, newY+75)&& GetPieceName(newX+75, newY+75).contains("King")))){
-      return  true;
-    }
-    return false;
-  }
 
 
 
@@ -259,20 +213,7 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 		System.out.println("The starting coordinates are : "+"("+landingX+","+landingY+")");
 		System.out.println("----------------------------");
 
-		Boolean blackTurn = false;
-
-    if(whiteTurn){
-  		if(pieceName.contains("White") && !(xMovement == 0 && yMovement == 0)){
-  			blackTurn = true; //
-  		}
-  	}
-  	else{
-  		if(pieceName.contains("Black") && !(xMovement == 0 && yMovement == 0)){
-  			blackTurn = true;
-  		}
-  	}
-     if(blackTurn){
-
+		Boolean possible = false;
 
 
 
@@ -290,16 +231,11 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 			demonstration purposes the Pawn here turns into a Queen.
 		*/
     //Black Pawn
-    if(pieceName.equals("BlackPawn")){ /*Here we are saying if the piece is a “Black Pawn do something */
-      if(startY == 6){                     /*if the pawn is making its first move, the pawn can either move one or two squares in the Y direction as long as we are moving up the board,
-                                      and if there is no movement in the x direction */
-   if(((yMovement==1)||(yMovement==2))&&(startY > landingY)&& (xMovement == 0)){ /* restrictions are being added toensure that the piece acts like a pawn.
-                                                                                      Two variables have been added xMovement and yMovement which
-                                                                                      give the coordinates of were the piece is being dropped onto the board*/
+    if(pieceName.equals("BlackPawn")){
+ if(startY == 6){
+   if(((yMovement==1)||(yMovement==2))&&(startY > landingY)&& (xMovement == 0)){
      if(yMovement==2){
-       if((!piecePresent(e.getX(), e.getY()))&&(!piecePresent(e.getX(), (e.getY()+75)))){  /* we are calling a method called piecePresent and passing in
-                                                                                            some coordinates. The code is being executed in the mouseReleased(MouseEvent e) method and we
-                                                                                            can capture the location of the position using the e.getX() and e.getY() methods*/
+       if((!piecePresent(e.getX(), e.getY()))&&(!piecePresent(e.getX(), (e.getY()+75)))){
          validMove=true;
        }
      }
@@ -311,14 +247,13 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
    }
    else if((yMovement == 1)&&(startY > landingY)&& (xMovement ==1)){
      if(piecePresent(e.getX(), e.getY())){
-       if(checkBlackOponent(e.getX(),e.getY())){   /* a method called checkBlackOponent that takes as an argument the coordinates
-                                                     of a position and checks if there is an opponent’s piece present on the square*/
+       if(checkBlackOponent(e.getX(),e.getY())){
          validMove=true;
        }
      }
    }
  }
- else{ // this is where the pawn is making all subqueen moves
+ else{
    if(((yMovement==1))&&(startY > landingY)&&(xMovement ==0)){
      if(!piecePresent(e.getX(), e.getY())){
        validMove = true;
@@ -329,8 +264,7 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
    }
    else if((yMovement ==1)&&(startY > landingY)&& (xMovement ==1)){
      if(piecePresent(e.getX(), e.getY())){
-       if(checkBlackOponent(e.getX(),e.getY())){   /* a method called checkBlackOponent that takes as an argument the coordinates
-                                                     of a position and checks if there is an opponent’s piece present on the square*/
+       if(checkBlackOponent(e.getX(),e.getY())){
          validMove=true;
          if(landingY==0){
            progression=true;
@@ -383,8 +317,7 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
     				}
     				else if ((startX - 1 >= 0) || (startX + 1 <= 7)) {
     					if ((piecePresent(e.getX(), e.getY())) && (xMovement == yMovement) && (xMovement == 1)) {
-    						if (checkWhiteOponent(e.getX(), e.getY())) {  /* a method called checkWhiteOponent that takes as an argument the coordinates
-                                                              of a position and checks if there is an opponent’s piece present on the square*/
+    						if (checkWhiteOponent(e.getX(), e.getY())) {
     							validMove = true;
     							if (startY == 6) {
     								success = true;
@@ -414,8 +347,7 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
           if (piecePresent(e.getX(), (e.getY()))) {
             //Checking if you can take an opponent piece
             if (pieceName.contains("White")) {
-              if (checkWhiteOponent(e.getX(), e.getY())) { /* a method called checkWhiteOponent that takes as an argument the coordinates
-                                                            of a position and checks if there is an opponent’s piece present on the square*/
+              if (checkWhiteOponent(e.getX(), e.getY())) {
                 validMove = true;
               }
               else {
@@ -423,8 +355,7 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
               }
             }
             else {
-              if (checkBlackOponent(e.getX(), e.getY())) {   /* a method called checkBlackOponent that takes as an argument the coordinates
-                                                            of a position and checks if there is an opponent’s piece present on the square*/
+              if (checkBlackOponent(e.getX(), e.getY())) {
                 validMove = true;
 
               }
@@ -443,14 +374,6 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
       }
     }//End Knight
     //start of Bishop
-
-    /*
-      * The Bishop can move along any diagonal until it hits an enemy piece or its
-      * own piece it cannot jump over its own piece. We need to use four different
-      * loops to go through the possible movements to identify possible squares to
-      * move to. The temporary squares, i.e. the values of x and y must change by the
-      * same amount on each iteration of each of the loops. */
-
     if (pieceName.contains("Bishup")) {
 				//Checking if there is a piece in the bishops path
 				Boolean inTheWay = false;
@@ -492,8 +415,7 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 						} else {
 							if (piecePresent(e.getX(), (e.getY()))) {
 								if (pieceName.contains("White")) {
-									if (checkWhiteOponent(e.getX(), e.getY())) {       /* a method called checkWhiteOponent that takes as an argument the coordinates
-                                                                of a position and checks if there is an opponent’s piece present on the square*/
+									if (checkWhiteOponent(e.getX(), e.getY())) {
 										validMove = true;
 									} else {
 										validMove = false;
@@ -573,15 +495,13 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 						} else {
 							if (piecePresent(e.getX(), (e.getY()))) {
 								if (pieceName.contains("White")) {
-									if (checkWhiteOponent(e.getX(), e.getY())) {  /* a method called checkWhiteOponent that takes as an argument the coordinates
-                                                                of a position and checks if there is an opponent’s piece present on the square*/
+									if (checkWhiteOponent(e.getX(), e.getY())) {
 										validMove = true;
 									} else {
 										validMove = false;
 									}
 								} else {
-									if (checkBlackOponent(e.getX(), e.getY())) {   /* a method called checkBlackOponent that takes as an argument the coordinates
-                                                                of a position and checks if there is an opponent’s piece present on the square*/
+									if (checkBlackOponent(e.getX(), e.getY())) {
                     validMove = true;
 
 									} else {
@@ -636,19 +556,17 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
             if (inTheWay) {
               validMove = false;
             } else {
-              // checking if its an enemy piece
-              // if not, is it a  free space
+              // checking if its enemy piece
+              // or its free space
               if (piecePresent(e.getX(), (e.getY()))) {
                 if (pieceName.contains("White")) { //moving WhiteQueen
-                  if (checkWhiteOponent(e.getX(), e.getY())) {  /* a method called checkWhiteOponent that takes as an argument the coordinates
-                                                                of a position and checks if there is an opponent’s piece present on the square*/
+                  if (checkWhiteOponent(e.getX(), e.getY())) {
                     validMove = true;
 
 
                   }
                 } else { //moving BlackQueen
-                  if (checkBlackOponent(e.getX(), e.getY())) {  /* a method called checkBlackOponent that takes as an argument the coordinates
-                                                                of a position and checks if there is an opponent’s piece present on the square*/
+                  if (checkBlackOponent(e.getX(), e.getY())) {
                     validMove = true;
 
                   }
@@ -657,14 +575,14 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
                 validMove = true;
               }
             }
-          }// end of bishop movemnents from a queen perspective
+          }// end of bishop movemnents
 
           else if (((xMovement != 0) && (yMovement == 0)) || ((xMovement == 0) && (yMovement != 0))) {
-          //now the queen is moving like a Rook
+          //this is to move as Rook
           if (xMovement != 0) {
-            //  movement along the x axis
+            // we have movement along the x axis
             if (startX - landingX > 0) {
-              // to move in left direction, the value has to be > 0
+              // to move in left direction, only if value will be > 0
               for (int i = 0; i < xMovement; i++) {
                 if (piecePresent(initialX - (i * 75), e.getY())) {
                   inTheWay = true;
@@ -685,9 +603,9 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
             }
           }
           else {
-            //  movement along the y axis
+            // we have movement along the y axis
             if (startY - landingY > 0) {
-              // for the queen to move in left direction it can but  only if the value is > 0
+              // to move in left direction, only if value will be > 0
               for (int i = 0; i < yMovement; i++) {
                 if (piecePresent(e.getX(), initialY - (i * 75))) {
                   inTheWay = true;
@@ -711,17 +629,16 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
           if (inTheWay) {
             validMove = false;
           } else {
-            // this here is checking if its enemy piece, or if it is a free space
+            // checking if its enemy piece
+            // or its free space
             if (piecePresent(e.getX(), (e.getY()))) {
               if (pieceName.contains("White")) {
-                if (checkWhiteOponent(e.getX(), e.getY())) {  /* a method called checkWhiteOponent that takes as an argument the coordinates
-                                                              of a position and checks if there is an opponent’s piece present on the square*/
+                if (checkWhiteOponent(e.getX(), e.getY())) {
                   validMove = true;
 
                 }
               } else {
-                if (checkBlackOponent(e.getX(), e.getY())) {  /* a method called checkBlackOponent that takes as an argument the coordinates
-                                                              of a position and checks if there is an opponent’s piece present on the square*/
+                if (checkBlackOponent(e.getX(), e.getY())) {
                   validMove = true;
 
                 }
@@ -730,59 +647,36 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
               validMove = true;
             }
           }
-        }//ending Rook movement as a queen
+        }//ending like Rook
       }
     }
     // End of Queen
 
-
     //King movement
-
-    /* If moving king piececheck if piece is moving within boundaries of board if no, validMove = false
-        elseif king is making any of these valid moves when check if theres a piece where its going to move to
-        if youre moving a white king, check if theres an opponent piece where its going to move toif yes, then take itotherwise invalid move
-        else if youre a black king, check if theres an opponent piece where its going to move to if yes, then take it
-        otherwise invalid move otherwise if theres no piece where its moving to, its a valid move*/
-
-
-
   if(pieceName.contains("King")){
-    if ((landingX < 0) ||(landingX >7) || (landingY < 0) || (landingY > 7)){ // checling to see if the piece is present on the board
+    if ((landingX < 0) ||(landingX >7) || (landingY < 0) || (landingY > 7)){
       validMove = false;
   }  else{
 
-    if (((xMovement == 1) && (yMovement == 1)) || // check if ther king is moving diagonal
-        ((xMovement == 1) && (yMovement == 0)) || // moves left or right
-        ((xMovement == 0) && (yMovement == 1))) { // moves upwards or downwards
-          if(!(IsKingAdjacent(e.getX(),e.getY()))){ // if there is no king
-
-
+    if (((Math.abs(startX - landingX) == 1) && (Math.abs(startY - landingY) == 1)) || //checks conditions that king is moving 1 space each time
+        ((Math.abs(startX - landingX) == 1) && (Math.abs(startY - landingY) == 0)) ||
+        ((Math.abs(startX - landingX) == 0) && (Math.abs(startY - landingY) == 1))) {
         if(piecePresent(e.getX(),e.getY())){
-          System.out.println("stepz");
             if(pieceName.contains("White")){
-              System.out.println("stepw");
-              if(checkWhiteOponent(getX(),e.getY())){  /* a method called checkWhiteOponent that takes as an argument the coordinates
-                                                            of a position and checks if there is an opponent’s piece present on the square*/
+              if(checkWhiteOponent(getX(),e.getY())){
                 validMove = true;
-                System.out.println("stepone");
               }
-              else{
-                validMove = false;
-                System.out.println("steptwo");}
-
             }
             else if (pieceName.contains("Black")){
-              if(checkBlackOponent(e.getX(),e.getY())){   /* a method called checkBlackOponent that takes as an argument the coordinates
-                                                            of a position and checks if there is an opponent’s piece present on the square*/
+              if(checkBlackOponent(e.getX(),e.getY())){
                 validMove = true;
               }
-            } else validMove = false;
+            }
           } else validMove = true;
-        }
+
       }
     }
 }
-}
 
 
 
@@ -793,63 +687,51 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 
 
 
-if(!validMove){
-   int location=0;
-   if(startY ==0){
-     location = startX;
-   }
-   else{
-     location  = (startY*8)+startX;
-   }
-   String pieceLocation = pieceName+".png";
-   pieces = new JLabel(new ImageIcon(pieceLocation));
-   panels = (JPanel)chessBoard.getComponent(location);
-     panels.add(pieces);
- }
- else{
 
-   if(progression){
-     int location = 0 + (e.getX()/75);
-     if(c instanceof JLabel){
-       Container parent = c.getParent();
-       parent.remove(0);
-       pieces = new JLabel(new ImageIcon("BlackQueen.png"));
-       parent = (JPanel)chessBoard.getComponent(location);
-       parent.add(pieces);
-     }
 
-   }
-   else if(success){
-     int location = 56 + (e.getX()/75);
-     if (c instanceof JLabel){
-       Container parent = c.getParent();
-       parent.remove(0);
-       pieces = new JLabel( new ImageIcon("WhiteQueen.png") );
-       parent = (JPanel)chessBoard.getComponent(location);
-       parent.add(pieces);
-     }
-     else{
-       Container parent = (Container)c;
-       pieces = new JLabel( new ImageIcon("WhiteQueen.png") );
-       parent = (JPanel)chessBoard.getComponent(location);
-       parent.add(pieces);
-     }
-   }
-   else{
-     if(c instanceof JLabel){
-       Container parent = c.getParent();
-       parent.remove(0);
-       parent.add( chessPiece );
-     }
-     else{
-       Container parent = (Container)c;
-       parent.add( chessPiece );
-     }
-     chessPiece.setVisible(true);
-   }
-   whiteTurn = !whiteTurn;
-   blackTurn = false;
- }
+		if(!validMove){
+			int location=0;
+			if(startY ==0){
+				location = startX;
+			}
+			else{
+				location  = (startY*8)+startX;
+			}
+			String pieceLocation = pieceName+".png";
+			pieces = new JLabel( new ImageIcon(pieceLocation) );
+			panels = (JPanel)chessBoard.getComponent(location);
+		    panels.add(pieces);
+		}
+		else{
+			if(success){
+				int location = 56 + (e.getX()/75);
+				if (c instanceof JLabel){
+	            	Container parent = c.getParent();
+	            	parent.remove(0);
+					pieces = new JLabel( new ImageIcon("WhiteQueen.png") );
+					parent = (JPanel)chessBoard.getComponent(location);
+			    	parent.add(pieces);
+				}
+				else{
+					Container parent = (Container)c;
+	            	pieces = new JLabel( new ImageIcon("WhiteQueen.png") );
+					parent = (JPanel)chessBoard.getComponent(location);
+			    	parent.add(pieces);
+				}
+			}
+			else{
+				if (c instanceof JLabel){
+	            	Container parent = c.getParent();
+	            	parent.remove(0);
+	            	parent.add( chessPiece );
+	        	}
+	        	else {
+	            	Container parent = (Container)c;
+	            	parent.add( chessPiece );
+	        	}
+	    		chessPiece.setVisible(true);
+			}
+		}
 }
 
 
